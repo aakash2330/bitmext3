@@ -4,8 +4,9 @@ import { SparklesCore } from "../ui/sparkles";
 import Link from "next/link";
 import { CircleChevronRightIcon } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { Session } from "next-auth";
 
-export default function SparklesText({ session }: { session: any }) {
+export default function SparklesText({ session }: { session: Session | null }) {
   const { toast } = useToast();
   return (
     <div className="flex h-[40rem] w-full flex-col items-center justify-center overflow-hidden rounded-md bg-black">

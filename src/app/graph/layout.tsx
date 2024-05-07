@@ -12,7 +12,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const { data } = await api.symbol.getAllSymbols();
-  const symbolData =data.map((s: any) => {
+  const symbolData = data.map((s) => {
     return s.symbol;
   });
   const session = await getServerAuthSession();
