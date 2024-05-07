@@ -22,6 +22,7 @@ export default function SymbolSearch({ symbolData }: { symbolData: string[] }) {
   const [open, setOpen] = useState(false);
   const [selectedSymbol, setSelectedSymbol] = useState<string | null>(null);
   return (
+
     <div className="flex  justify-center items-center space-x-4">
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
