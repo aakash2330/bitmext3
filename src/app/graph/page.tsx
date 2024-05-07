@@ -14,7 +14,7 @@ export default async function Page({
     const { data } = await api.symbol.getSymbolData({
       symbol: searchParams.symbol as string,
     });
-    const updatedData = data.data.map((s: any) => {
+    const updatedData = data.map((s: any) => {
       return [
         JSON.stringify(GetFormattedDate(new Date(s.timestamp))),
         s.open,
@@ -26,7 +26,7 @@ export default async function Page({
     console.log({ updatedData });
     return (
       <div key={Math.random()}>
-        <Graph1 dataUnrefined={data.data} data={updatedData}></Graph1>
+        <Graph1 dataUnrefined={data} data={updatedData}></Graph1>
       </div>
     );
   }

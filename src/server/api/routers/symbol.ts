@@ -11,17 +11,16 @@ export const symbolRouter = createTRPCRouter({
   getSymbolData: publicProcedure
     .input(z.object({ symbol: z.string() }))
     .query(async ({ input }) => {
-      const { data } = await axios.post(
-        `${process.env.NEXTAUTH_URL}/api/instrument`,
-        {
-          symbol: input.symbol,
-        },
+      const { data } = await axios.get(
+        `https://www.bitmex.com/api/v1/trade/bucketed?binSize=1d&partial=false&symbol=${input.symbol}&count=30&reverse=true`,
       );
       return { data };
     }),
 
   getAllSymbols: publicProcedure.query(async () => {
-    const { data } = await axios.get(`${process.env.NEXTAUTH_URL}/api/symbols`);
+    const { data } = await axios.get(
+      `https://www.bitmex.com/api/v1/instrument?columns=symbol&count=1000&reverse=true`,
+    );
     return { data };
   }),
 });

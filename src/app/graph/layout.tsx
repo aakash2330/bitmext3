@@ -2,7 +2,7 @@ import SymbolSearch from "@/components/form/symbolForm";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Signout from "@/components/ui/signout";
-import { getServerAuthSession } from "@/lib/auth";
+import { getServerAuthSession } from "@/server/auth";
 import { api } from "@/trpc/server";
 import axios from "axios";
 
@@ -12,7 +12,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const { data } = await api.symbol.getAllSymbols();
-  const symbolData = data.data.map((s: any) => {
+  const symbolData =data.map((s: any) => {
     return s.symbol;
   });
   const session = await getServerAuthSession();
