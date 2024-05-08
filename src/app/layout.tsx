@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html suppressHydrationWarning lang="en">
-      <body style={{ padding: "5rem" }} className={inter.className}>
+      <body className={`${inter.className} p-0 sm:p-10`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"

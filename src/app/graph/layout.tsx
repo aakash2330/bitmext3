@@ -24,7 +24,7 @@ export default async function RootLayout({
       </nav>
       <div className="flex flex-col gap-5">
         <div className="flex items-center justify-center p-7">
-          <Card className="flex w-[100%] sm:w-[50%] items-center justify-center bg-gradient-to-r from-purple-300 to-[#4299e1] p-7">
+          <Card className="flex w-[100%] items-center justify-center bg-gradient-to-r from-purple-300 to-[#4299e1] p-7 sm:w-[50%]">
             <ComboBoxResponsive symbolData={symbolData}></ComboBoxResponsive>
           </Card>
         </div>

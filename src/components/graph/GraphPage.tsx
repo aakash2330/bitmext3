@@ -2,30 +2,12 @@
 
 import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import axios from "axios";
-import { useDebounce } from "@/lib/debounce";
-import SymbolSearch from "@/components/form/symbolForm";
-import { TupdatedTradeData } from "@/lib/validators";
-
 const ReactEcharts = dynamic(() => import("echarts-for-react"), { ssr: false });
+
 const upColor = "#ec0000";
 const upBorderColor = "#8A0000";
 const downColor = "#00da3c";
 const downBorderColor = "#008F28";
-// Each item: open，close，lowest，highest
-function splitData(rawData: any) {
-  const categoryData = [];
-  const values = [];
-  for (var i = 0; i < rawData.length; i++) {
-    categoryData.push(rawData[i].splice(0, 1)[0]);
-    values.push(rawData[i]);
-  }
-  return {
-    categoryData: categoryData,
-    values: values,
-  };
-}
-
 const data0 = splitData([
   ["2013/1/24", 2320.26, 2320.26, 2287.3, 2362.94],
   ["2013/1/25", 2300, 2291.3, 2288.26, 2308.38],
@@ -116,6 +98,20 @@ const data0 = splitData([
   ["2013/6/7", 2242.26, 2210.9, 2205.07, 2250.63],
   ["2013/6/13", 2190.1, 2148.35, 2126.22, 2190.1],
 ]);
+
+function splitData(rawData: (number | string)[][]) {
+  const categoryData = [];
+  const values = [];
+  for (var i = 0; i < rawData.length; i++) {
+    categoryData.push(rawData[i]?.splice(0, 1)[0]);
+    values.push(rawData[i]);
+  }
+  return {
+    categoryData: categoryData,
+    values: values,
+  };
+}
+
 export default function GraphPage({
   data,
   symbol,
@@ -124,17 +120,40 @@ export default function GraphPage({
   symbol: string;
 }) {
   const data1 = splitData(JSON.parse(data));
+  function calculateMA(dayCount: number) {
+    var result = [];
+    for (var i = 0, len = data1.values.length; i < len; i++) {
+      if (i < dayCount) {
+        result.push("-");
+        continue;
+      }
+      var sum = 0;
+      for (var j = 0; j < dayCount; j++) {
+        sum += Number(data1?.values[i - j]?.[1] ?? 0);
+      }
+      result.push(sum / dayCount);
+    }
+    return result;
+  }
   return (
     <div>
       <div className="relative flex flex-col items-center justify-center gap-2  text-white"></div>
       <ReactEcharts
         style={{ height: "40rem" }}
+        className=""
         option={{
+          title: {
+            text: "",
+            left: 0,
+          },
           tooltip: {
             trigger: "axis",
             axisPointer: {
               type: "cross",
             },
+          },
+          legend: {
+            data: ["MA5", "MA10", "MA20", "MA30"],
           },
           grid: {
             left: "10%",
@@ -181,8 +200,21 @@ export default function GraphPage({
                 borderColor: upBorderColor,
                 borderColor0: downBorderColor,
               },
-
+              markPoint: {
+                label: {
+                  formatter: function (param: any) {
+                    return param != null ? Math.round(param.value) + "" : "";
+                  },
+                },
+                data: [],
+                tooltip: {
+                  formatter: function (param: any) {
+                    return param.name + "<br>" + (param.data.coord || "");
+                  },
+                },
+              },
               markLine: {
+                symbol: ["none", "none"],
                 data: [
                   [
                     {
@@ -190,22 +222,78 @@ export default function GraphPage({
                       type: "min",
                       valueDim: "lowest",
                       symbol: "circle",
-                      symbolSize: 2,
+                      symbolSize: 10,
                       label: {
-                        show: true,
+                        show: false,
+                      },
+                      emphasis: {
+                        label: {
+                          show: false,
+                        },
                       },
                     },
                     {
                       type: "max",
                       valueDim: "highest",
                       symbol: "circle",
-                      symbolSize: 2,
+                      symbolSize: 10,
                       label: {
-                        show: true,
+                        show: false,
+                      },
+                      emphasis: {
+                        label: {
+                          show: false,
+                        },
                       },
                     },
                   ],
+                  {
+                    name: "min line on close",
+                    type: "min",
+                    valueDim: "close",
+                  },
+                  {
+                    name: "max line on close",
+                    type: "max",
+                    valueDim: "close",
+                  },
                 ],
+              },
+            },
+            {
+              name: "MA5",
+              type: "line",
+              data: calculateMA(5),
+              smooth: true,
+              lineStyle: {
+                opacity: 0.5,
+              },
+            },
+            {
+              name: "MA10",
+              type: "line",
+              data: calculateMA(10),
+              smooth: true,
+              lineStyle: {
+                opacity: 0.5,
+              },
+            },
+            {
+              name: "MA20",
+              type: "line",
+              data: calculateMA(20),
+              smooth: true,
+              lineStyle: {
+                opacity: 0.5,
+              },
+            },
+            {
+              name: "MA30",
+              type: "line",
+              data: calculateMA(30),
+              smooth: true,
+              lineStyle: {
+                opacity: 0.5,
               },
             },
           ],

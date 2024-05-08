@@ -9,7 +9,7 @@ import axios from "axios";
 import { TsymbolData, TsymbolTradeData } from "@/lib/validators";
 
 export const symbolRouter = createTRPCRouter({
-  getSymbolData: protectedProcedure
+  getSymbolData: publicProcedure
     .input(z.object({ symbol: z.string() }))
     .query(async ({ input }) => {
       const { data }: { data: TsymbolTradeData[] } = await axios.get(
@@ -19,7 +19,7 @@ export const symbolRouter = createTRPCRouter({
       return { data };
     }),
 
-  getAllSymbols: protectedProcedure.query(async () => {
+  getAllSymbols: publicProcedure.query(async () => {
     const { data }: { data: TsymbolData[] } = await axios.get(
       `https://www.bitmex.com/api/v1/instrument?columns=symbol&count=1000&reverse=true`,
     );
