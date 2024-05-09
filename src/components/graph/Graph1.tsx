@@ -1,14 +1,7 @@
 "use client"
 import { Card, CardContent } from "@/components/ui/card";
 import GraphPage from "./GraphPage";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { TsymbolData, TsymbolTradeData, TupdatedTradeData } from "@/lib/validators";
-import { Separator } from "../ui/separator";
 import { useRecoilState } from "recoil";
 import { symbolAtom } from "@/atoms/symbolAtom";
 
@@ -46,7 +39,7 @@ export default function Graph1({
             <div>
               <CardContent className="p-6 text-sm h-[40rem] overflow-auto">
                 <div className="grid gap-3">
-                  <div className="font-semibold">Order Details</div>
+                  <div className="font-semibold">{symbolData.symbol}</div>
                   <ul className="grid gap-3">
                     {Object.keys(symbolData).map((key,index)=>{
                       return <li key={index} className="flex items-center justify-between">
