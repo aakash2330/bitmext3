@@ -91,10 +91,10 @@ function StatusList({
                   (e.target as HTMLInputElement).value.toUpperCase(),
                 ) ||
                 s
-                  .slice(1)
-                  .startsWith(
-                    (e.target as HTMLInputElement).value.toUpperCase(),
-                  )
+                  .split(".")
+                  [
+                    s.split(".").length - 1
+                  ]!.startsWith((e.target as HTMLInputElement).value.toUpperCase())
               ) {
                 return true;
               }

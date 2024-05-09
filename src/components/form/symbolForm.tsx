@@ -45,7 +45,7 @@ export default function SymbolSearch({ symbolData }: { symbolData: string[] }) {
                         (e.target as HTMLInputElement).value.toUpperCase(),
                       ) ||
                       s
-                        .slice(1)
+                        .split(".")[s.split(".").length-1]!
                         .startsWith(
                           (e.target as HTMLInputElement).value.toUpperCase(),
                         )
