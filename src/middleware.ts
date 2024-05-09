@@ -1,3 +1,3 @@
 
 export { default } from "next-auth/middleware";
-export consst config = { matcher: ["/graph"] };
+export const config = { matcher: ["/graph"] };
