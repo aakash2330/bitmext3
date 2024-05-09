@@ -18,14 +18,42 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useMediaQuery } from "@/hooks/use-media-query";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useRecoilState } from "recoil";
+import { symbolAtom } from "@/atoms/symbolAtom";
+import { TsymbolData } from "@/lib/validators";
 
-export function ComboBoxResponsive({ symbolData }: { symbolData: string[] }) {
+export function ComboBoxResponsive({
+  symbolData,
+  symbolDataUnrefined,
+}: {
+  symbolData: string[];
+  symbolDataUnrefined: TsymbolData[];
+}) {
+
+  const searchParams=useSearchParams()
   const [open, setOpen] = React.useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const [selectedStatus, setSelectedStatus] = React.useState<string | null>(
-    null,
+    searchParams.get('symbol')??null,
   );
+  const [selectedSymbolData, setSelectedSymbolData] = useRecoilState(symbolAtom);
+
+
+  React.useEffect(() => {
+    if (selectedStatus) {
+      setSelectedSymbolData((prev) => {
+        const symbolData = symbolDataUnrefined.find((s) => {
+          return s.symbol == selectedStatus;
+        });
+        if (symbolData) {
+          return symbolData;
+        } else {
+          return prev;
+        }
+      });
+    }
+  }, [selectedStatus]);
 
   if (isDesktop) {
     return (

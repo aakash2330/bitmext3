@@ -1,3 +1,4 @@
+"use client"
 import { Card, CardContent } from "@/components/ui/card";
 import GraphPage from "./GraphPage";
 import {
@@ -6,7 +7,10 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { TsymbolTradeData, TupdatedTradeData } from "@/lib/validators";
+import { TsymbolData, TsymbolTradeData, TupdatedTradeData } from "@/lib/validators";
+import { Separator } from "../ui/separator";
+import { useRecoilState } from "recoil";
+import { symbolAtom } from "@/atoms/symbolAtom";
 
 export function getFormattedDate(date: Date) {
   const year = date.getFullYear();
@@ -23,6 +27,8 @@ export default function Graph1({
   data: TupdatedTradeData[];
   dataUnrefined: TsymbolTradeData[];
 }) {
+
+  const [symbolData,setSymbolData]=useRecoilState(symbolAtom);
   if ((data.length, dataUnrefined.length)) {
     return (
       <div className="flex w-full flex-col bg-muted/40">
@@ -38,34 +44,24 @@ export default function Graph1({
               </Card>
             </div>
             <div>
-              <Card className="overflow-hidden" x-chunk="dashboard-05-chunk-4">
-                <CardContent className="h-[40rem] overflow-auto p-10 text-sm">
-                  <div className="flex items-center justify-center text-xl">
-                    {dataUnrefined[0]?.symbol ?? "S"}
-                  </div>
-                  <Accordion type="single" collapsible className="w-full">
-                    {dataUnrefined.map((d, index: number) => {
-                      return (
-                        <AccordionItem key={index} value={`item-${index}`}>
-                          <AccordionTrigger>
-                            {getFormattedDate(new Date(d.timestamp))}
-                          </AccordionTrigger>
-                          <AccordionContent>
-                            {Object.keys(d).map((key) => {
-                              return (
-                                <div>
-                                  {key.toUpperCase()} :{" "}
-                                  {d[key as keyof TsymbolTradeData]}
-                                </div>
-                              );
-                            })}
-                          </AccordionContent>
-                        </AccordionItem>
-                      );
+              <CardContent className="p-6 text-sm h-[40rem] overflow-auto">
+                <div className="grid gap-3">
+                  <div className="font-semibold">Order Details</div>
+                  <ul className="grid gap-3">
+                    {Object.keys(symbolData).map((key,index)=>{
+                      return <li key={index} className="flex items-center justify-between">
+                      <span className="text-muted-foreground">
+                          {key}
+                      </span>
+                      <span>{symbolData[key as keyof TsymbolData]}</span>
+                    </li>
+
                     })}
-                  </Accordion>
-                </CardContent>
-              </Card>
+                  </ul>
+                </div>
+
+
+              </CardContent>
             </div>
           </main>
         </div>
@@ -75,3 +71,4 @@ export default function Graph1({
     return <div>No data found</div>;
   }
 }
+

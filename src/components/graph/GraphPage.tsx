@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import { useRecoilState } from "recoil";
+import { symbolAtom } from "@/atoms/symbolAtom";
 const ReactEcharts = dynamic(() => import("echarts-for-react"), { ssr: false });
 
 const upColor = "#ec0000";
@@ -138,6 +140,7 @@ export default function GraphPage({
   return (
     <div>
       <div className="relative flex flex-col items-center justify-center gap-2  text-white"></div>
+
       <ReactEcharts
         style={{ height: "40rem" }}
         className=""

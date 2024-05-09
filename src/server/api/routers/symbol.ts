@@ -21,7 +21,7 @@ export const symbolRouter = createTRPCRouter({
 
   getAllSymbols: protectedProcedure.query(async () => {
     const { data }: { data: TsymbolData[] } = await axios.get(
-      `https://www.bitmex.com/api/v1/instrument?columns=symbol&count=1000&reverse=true`,
+      `https://www.bitmex.com/api/v1/instrument?count=1000&reverse=true`,
     );
 
     return { data };

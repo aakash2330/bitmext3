@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+import { RecoilRoot } from "recoil";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import { SessionProvider } from "next-auth/react";
 import SessionWrapper from "@/lib/sessionProvider";
 import { Toaster } from "@/components/ui/toaster";
+import { RecoilRootProvider } from "@/components/recoil-root/recoil-root";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,7 +29,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <SessionWrapper>{children}</SessionWrapper>
+          <SessionWrapper>
+            <RecoilRootProvider>{children}</RecoilRootProvider>
+          </SessionWrapper>
         </ThemeProvider>
         <Toaster />
       </body>
