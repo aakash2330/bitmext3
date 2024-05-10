@@ -1,9 +1,25 @@
-"use client"
+"use client";
 import { Card, CardContent } from "@/components/ui/card";
 import GraphPage from "./GraphPage";
-import { TsymbolData, TsymbolTradeData, TupdatedTradeData } from "@/lib/validators";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  TsymbolData,
+  TsymbolTradeData,
+  TupdatedTradeData,
+} from "@/lib/validators";
 import { useRecoilState } from "recoil";
 import { symbolAtom } from "@/atoms/symbolAtom";
+import useRefinedTradeWSdata from "@/app/test/page";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import OHLDdata from "../ui/OHLCdata";
 
 export function getFormattedDate(date: Date) {
   const year = date.getFullYear();
@@ -20,8 +36,8 @@ export default function Graph1({
   data: TupdatedTradeData[];
   dataUnrefined: TsymbolTradeData[];
 }) {
-
-  const [symbolData,setSymbolData]=useRecoilState(symbolAtom);
+  const tradeData = useRefinedTradeWSdata();
+  const [symbolData, setSymbolData] = useRecoilState(symbolAtom);
   if ((data.length, dataUnrefined.length)) {
     return (
       <div className="flex w-full flex-col bg-muted/40">
@@ -37,24 +53,62 @@ export default function Graph1({
               </Card>
             </div>
             <div>
-              <CardContent className="p-6 text-sm h-[40rem] overflow-auto">
-                <div className="grid gap-3">
-                  <div className="font-semibold">{symbolData.symbol}</div>
-                  <ul className="grid gap-3">
-                    {Object.keys(symbolData).map((key,index)=>{
-                      return <li key={index} className="flex items-center justify-between">
-                      <span className="text-muted-foreground">
-                          {key}
-                      </span>
-                      <span>{symbolData[key as keyof TsymbolData]}</span>
-                    </li>
-
-                    })}
-                  </ul>
-                </div>
-
-
-              </CardContent>
+              <Tabs defaultValue="details" className="w-full">
+                <TabsList className="flex items-center justify-center">
+                  <TabsTrigger value="details">Details</TabsTrigger>
+                  <TabsTrigger value="live">Live</TabsTrigger>
+                </TabsList>
+                <TabsContent
+                  className="h-[40rem] overflow-auto p-6 text-sm"
+                  value="details"
+                >
+                  <CardContent>
+                    <div className="grid gap-3">
+                      <div className="font-semibold">{symbolData.symbol}</div>
+                      <ul className="grid gap-3">
+                        {Object.keys(symbolData).map((key, index) => {
+                          return (
+                            <li
+                              key={index}
+                              className="flex items-center justify-between"
+                            >
+                              <span className="text-muted-foreground">
+                                {key}
+                              </span>
+                              <span>
+                                {symbolData[key as keyof TsymbolData]}
+                              </span>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </div>
+                  </CardContent>
+                </TabsContent >
+                <TabsContent className="h-[40rem] overflow-auto p-6 text-sm" value="live">
+                  <Table>
+                    <TableCaption>Live</TableCaption>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>TimeStamp</TableHead>
+                        <TableHead>Open</TableHead>
+                        <TableHead>High</TableHead>
+                        <TableHead>Low</TableHead>
+                        <TableHead>Close</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {tradeData.map((t: any, index: number) => {
+                        return (
+                          <TableRow key={index}>
+                            <OHLDdata  data={t}></OHLDdata>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </TabsContent>
+              </Tabs>
             </div>
           </main>
         </div>
@@ -64,4 +118,3 @@ export default function Graph1({
     return <div>No data found</div>;
   }
 }
-
