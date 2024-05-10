@@ -29,7 +29,7 @@ export default function useRefinedTradeWSdata() {
 
   useEffect(() => {
     if (messageBucket) {
-      if (messageBucket.length >= 5) {
+      if (messageBucket.length >= 2) {
         setMessageBucket([]);
         const refinedData = messageBucket.flatMap((m:any) => {
           if (m.data) return [m.data[0]];
